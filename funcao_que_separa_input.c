@@ -1,17 +1,46 @@
 /*
  * !!! Necessário compilação a flag "-lreadline". !!!
+ *
+ * 39 - aspas simples = 1;
+ * 34 - aspas duplas = 2;
 */
 
 #include "includes.h"
 #include "minishell.h"
 
+int	next_quote(int type, char *str, int idx)
+{
+	while (str[++idx])
+	{
+		if (str[idx] == type)
+			return (idx);
+	}
+	return (0);
+}
 
+int	check_single_quotes(char *str)
+{
+	int	flag;
+
+	flag = 0;
+	while (*str)
+	{
+		if ((*str == 34 || *str == 39) && flag == 0)
+			flag = *str;
+		else if ((*str == 34 || *str == 39) && flag == *str)
+			flag = 0;
+		str++;
+	}
+	if (flag == 0)
+		return (1);
+	else
+		return (0);
+}
 
 int main(void)
 {
 	char	*input;
-	char	**break_input;
-	int		i;
+	int	ret;
 
 	printf("Bem-vindo ao programa de exemplo readline!\n");
 	printf("Digite 'sair' para sair.\n");
@@ -27,22 +56,19 @@ int main(void)
 			break ;
 		}
 
-		break_input = ft_split(input, ''')
-        /*
-        pegar essa função e tirar os espaço. Rever algumas quetões feitas
-        no exame-rank2.
-        */
-
-		i = -1;
-		while (break_input[++i])
+		ret = check_single_quotes(input);
+		if (ret)
 		{
 			rl_on_new_line();
-			rl_replace_line(break_input[i], 0);
+			rl_replace_line("Aspas ok.\n", 0);
 			rl_redisplay();
-			write(1, "\n", 1);
-			free(break_input[i]);
 		}
-		free(break_input);
+		else if (!ret)
+		{
+			rl_on_new_line();
+			rl_replace_line("Aspas sem fechamento.\n", 0);
+			rl_redisplay();
+		}
 		free(input);
 	}
 
