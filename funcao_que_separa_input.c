@@ -1,5 +1,5 @@
 /*
- * !!! Necessário compilação a flag "-lreadline". !!!
+ * Compilação: "cc -Wall -Wextra -Werror funcao_que_separa_input.c -lreadline". !!!
  *
  * 39 - aspas simples = 1;
  * 34 - aspas duplas = 2;
@@ -8,41 +8,45 @@
 #include "includes.h"
 #include "minishell.h"
 
-int	next_quote(int type, char *str, int idx)
+int	essa_aspa_tem_fechamentoP(char *str, int idx)
 {
+	int	tipo = str[idx];
 	while (str[++idx])
 	{
-		if (str[idx] == type)
+		if (str[idx] == tipo)
 			return (idx);
 	}
 	return (0);
 }
 
-int	check_single_quotes(char *str)
+char	*frase_dentro_das_aspas(char *str, int idx)
 {
-	int	flag;
-
-	flag = 0;
-	while (*str)
-	{
-		if ((*str == 34 || *str == 39) && flag == 0)
-			flag = *str;
-		else if ((*str == 34 || *str == 39) && flag == *str)
-			flag = 0;
-		str++;
-	}
-	if (flag == 0)
-		return (1);
-	else
-		return (0);
+	int	len;
+	int	idx_ret;
+	int	fechamento;
+	char	*retorno;
+	
+	fechamento = essa_aspa_tem_fechamentoP(str, idx);
+	if (!fechamento)
+		return (NULL);
+	len = (fechamento - idx);
+	retorno = (char *) malloc(len * sizeof(char));
+	if (!retorno)
+		return (NULL);
+	idx_ret = -1;
+	while (++idx < fechamento)
+		retorno[++idx_ret] = str[idx];
+	retorno[idx_ret + 1] = '\0';
+	return (retorno);
 }
 
 int main(void)
 {
 	char	*input;
-	int	ret;
+	char	*aspas;
+	int	i;
 
-	printf("Bem-vindo ao programa de exemplo readline!\n");
+	printf("Bem-vindo ao nosso start!\n");
 	printf("Digite 'sair' para sair.\n");
 
 	while (1)
@@ -56,18 +60,26 @@ int main(void)
 			break ;
 		}
 
-		ret = check_single_quotes(input);
-		if (ret)
+		i = 0;
+		while (input[i])
 		{
-			rl_on_new_line();
-			rl_replace_line("Aspas ok.\n", 0);
-			rl_redisplay();
-		}
-		else if (!ret)
-		{
-			rl_on_new_line();
-			rl_replace_line("Aspas sem fechamento.\n", 0);
-			rl_redisplay();
+			if (input[i] == 34 || input[i] == 39)
+			{
+				aspas = frase_dentro_das_aspas(input, i);
+				if (!aspas)
+				{
+					rl_on_new_line();
+					rl_replace_line("Aspas sem fechamento.\n", 0);
+					rl_redisplay();
+				}
+				else
+				{
+					printf("%s|\n", aspas);
+					free(aspas);
+					i = essa_aspa_tem_fechamentoP(input, i);
+				}
+			}
+			i++;
 		}
 		free(input);
 	}
