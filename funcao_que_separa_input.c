@@ -9,20 +9,20 @@
 #include "includes.h"
 #include "minishell.h"
 
-int tem_espaco(int c)
+int is_space(int c)
 {
 	if (c == ' ' || c == '\t')
 		return (c);
 	return (0);
 }
 
-int	essa_aspa_tem_fechamentoP(char *str, int idx, int tipo)
+int	find_next_char(char *str, int idx, int tipo)
 {
 	while (str[idx])
 	{
 		if (tipo == 1)
 		{
-			if (tem_espaco(str[idx]))
+			if (is_space(str[idx]))
 				return (idx);
 			else if (str[idx + 1] == 34 || str[idx +1] == 39)
 				return (++idx);
@@ -36,14 +36,14 @@ int	essa_aspa_tem_fechamentoP(char *str, int idx, int tipo)
 	return (0);
 }
 
-char	*frase_dentro_das_aspas(char *str, int idx)
+char	*string_inside_quotes(char *str, int idx)
 {
 	int	len;
 	int	idx_ret;
 	int	fechamento;
 	char	*retorno;
 	
-	fechamento = essa_aspa_tem_fechamentoP(str, idx, str[idx]);
+	fechamento = find_next_char(str, idx, str[idx]);
 	if (!fechamento)
 		return (NULL);
 	len = fechamento - idx;
@@ -57,14 +57,14 @@ char	*frase_dentro_das_aspas(char *str, int idx)
 	return (retorno);
 }
 
-char	*palavra_unica(char *str, int idx)
+char	*word_between_spaces(char *str, int idx)
 {
 	int len;
 	int ultimo;
 	int iret;
 	char *ret;
 
-	ultimo = essa_aspa_tem_fechamentoP(str, idx, 1);
+	ultimo = find_next_char(str, idx, 1);
 	if (!ultimo)
 		return (NULL);
 	len = (ultimo - idx) + 1;
@@ -76,89 +76,35 @@ char	*palavra_unica(char *str, int idx)
 	return (ret);
 }
 
-/*----------------------------------------------------------------------*/
-
-// void	idexar_str(char *str)
-// {
-// 	int i = -1;
-// 	while (str[++i])
-// 		printf ("%d	- |%c|\n", i, str[i]);
-// }
-
 int input_tokens(char *str)
 {
 	int	i = 0;
 	int count = 0;
-	char *unico;
+	char *splited_part;
 
-	while(tem_espaco(str[i]))
+	while(is_space(str[i]))
 		i++;
 	while(str[i])
 	{
 		if(str[i] == 34 || str[i] == 39)
 		{
-			unico = frase_dentro_das_aspas(str, i);
-			if (!unico)
+			splited_part = string_inside_quotes(str, i);
+			if (!splited_part)
 				return (1);
-			printf("%d - Achei aspas		|%s|\n", count++, unico);
-			free(unico);
-			i = essa_aspa_tem_fechamentoP(str, i, str[i]);
+			printf("%d - Achei aspas		|%s|\n", count++, splited_part);
+			free(splited_part);
+			i = find_next_char(str, i, str[i]);
 		}
-		else if (!tem_espaco(str[i]))
+		else if (!is_space(str[i]))
 		{
-			unico = palavra_unica(str, i);
-			if (!unico)
+			splited_part = word_between_spaces(str, i);
+			if (!splited_part)
 				return (2);
-			printf("%d - Achei uma palavra	|%s|\n", count++, unico);
-			free(unico);
-			i = essa_aspa_tem_fechamentoP(str, i, 1) - 1;
+			printf("%d - Achei uma palavra	|%s|\n", count++, splited_part);
+			free(splited_part);
+			i = find_next_char(str, i, 1) - 1;
 		}
 		i++;
 	}
-	return (0);
-}
-
-/*----------------------------------------------------------------------*/
-
-int main(void)
-{
-	int i = -1;
-	char	*input;
-	char	*aspas;
-	int	ret_itokens;
-
-	printf("Bem-vindo ao nosso start!\n");
-	printf("Digite 'sair' para sair.\n");
-
-	while (1)
-	{
-		input = readline("\nnickname@123:~/um/caminho/qualquer$ ");
-		add_history(input);
-
-		if (strcmp(input, "sair") == 0)
-		{
-			free(input);
-			break ;
-		}
-
-		ret_itokens = input_tokens(input);
-		if (ret_itokens == 1)
-		{
-			rl_on_new_line();
-			rl_replace_line("Aspas sem fechamento.\n", 0);
-			rl_redisplay();
-		}
-		else if (ret_itokens == 2)
-		{
-			rl_on_new_line();
-			rl_replace_line("Erro na alocação de palavras.\n", 0);
-			rl_redisplay();
-		}
-		free(input);
-	}
-
-	rl_clear_history();
-	printf("\nPrograma encerrado.\n");
-
 	return (0);
 }

@@ -1,27 +1,41 @@
-NAME = minishell.a
+NAME	=	minishell
 
-CC = cc
+CC		= 	cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -g
 
-SRCS = funcao_que_separa_input.c\
+RM		=	rm -f
 
-OBJS = $(SRCS:.c=.o)
+LIBRARY	=	./libft/
+
+SRCS	=	funcao_que_separa_input.c\
+			funcao_que_inicia.c\
 
 all: $(NAME)
 
-.c.o:
-	$(CC) $(CFLAGS) -I . -c $< -o $@
+libft:
+	cd $(LIBRARY) && $(MAKE) && cp -v libft.a ../
 
-$(NAME): $(OBJS)
-	ar -rcs minishell.a $(OBJS)
+minishell: libft
+	cc -g $(SRCS) libft.a -lreadline -o $(NAME)
+
+run: re
+	./$(NAME)
+
+val: re
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=supressions.supp ./$(NAME)
+
+norm:
+	@-norminette -R CheckForbiddenSourceHeader
 
 clean:
-	rm -f $(OBJS)
+	cd $(LIBRARY) && $(MAKE) clean
 
-fclean: clean
-	rm -f $(NAME)
+fclean:	clean
+	$(RM) $(NAME)
+	$(RM) libft.a
+	cd $(LIBRARY) && $(MAKE) fclean
 
-re: fclean all
+re:	fclean all
 
-.PHONY : all clean fclean re bonus
+.PHONY:	all clean fclean re libft

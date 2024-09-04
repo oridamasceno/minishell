@@ -10,4 +10,10 @@ typedef struct s_token {
 	struct s_token *next;
 }		t_token;
 
+int is_space(int c);
+int	find_next_char(char *str, int idx, int tipo);
+int input_tokens(char *str);
+char	*string_inside_quotes(char *str, int idx);
+char	*word_between_spaces(char *str, int idx);
+
 #endif
