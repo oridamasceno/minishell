@@ -82,7 +82,6 @@ clean:
 
 fclean : clean
 	rm -f $(NAME)
-	rm -f $(OBJSBONUS)
 
 re : fclean all
 

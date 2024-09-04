@@ -18,18 +18,20 @@ int tem_espaco(int c)
 
 int	essa_aspa_tem_fechamentoP(char *str, int idx, int tipo)
 {
-
-	while (str[++idx])
+	while (str[idx])
 	{
 		if (tipo == 1)
 		{
 			if (tem_espaco(str[idx]))
 				return (idx);
-			else if(!str[idx + 1])
+			else if (str[idx + 1] == 34 || str[idx +1] == 39)
+				return (++idx);
+			else if (!str[idx + 1])
 				return (++idx);
 		}
+		idx++;
 		if (str[idx] == tipo)
-			return (idx);
+				return (idx);
 	}
 	return (0);
 }
@@ -76,6 +78,13 @@ char	*palavra_unica(char *str, int idx)
 
 /*----------------------------------------------------------------------*/
 
+// void	idexar_str(char *str)
+// {
+// 	int i = -1;
+// 	while (str[++i])
+// 		printf ("%d	- |%c|\n", i, str[i]);
+// }
+
 int input_tokens(char *str)
 {
 	int	i = 0;
@@ -102,17 +111,18 @@ int input_tokens(char *str)
 				return (2);
 			printf("%d - Achei uma palavra	|%s|\n", count++, unico);
 			free(unico);
-			i = essa_aspa_tem_fechamentoP(str, i, 1);
+			i = essa_aspa_tem_fechamentoP(str, i, 1) - 1;
 		}
 		i++;
 	}
 	return (0);
 }
 
-/*-----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 int main(void)
 {
+	int i = -1;
 	char	*input;
 	char	*aspas;
 	int	ret_itokens;
