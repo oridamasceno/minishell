@@ -9,6 +9,8 @@
 #include "includes.h"
 #include "minishell.h"
 
+/*is_space: Essa função verifica se o caractere é um espaço ou uma tab*/
+
 int is_space(int c)
 {
 	if (c == ' ' || c == '\t')
@@ -16,11 +18,15 @@ int is_space(int c)
 	return (0);
 }
 
-int	find_next_char(char *str, int idx, int tipo)
+/*find_next_char: Essa função procura o próximo caractere que seja
+igual ao caractere colocado em "type". Porém, se type for igual a
+"1", a função vai procurar o próximo espaço ou tab*/
+
+int	find_next_char(char *str, int idx, int type)
 {
 	while (str[idx])
 	{
-		if (tipo == 1)
+		if (type == 1)
 		{
 			if (is_space(str[idx]))
 				return (idx);
@@ -30,51 +36,64 @@ int	find_next_char(char *str, int idx, int tipo)
 				return (++idx);
 		}
 		idx++;
-		if (str[idx] == tipo)
+		if (str[idx] == type)
 				return (idx);
 	}
 	return (0);
 }
 
+/*string_inside_quotes: Essa função pega um vetor iniciado a partir de uma
+aspa direcionada por "idx". Ela pega todos os caracteres seguintes até que a
+próxima aspa seja encontrada. Caso não tenha próxima aspa, a função retorna
+"NULL"*/
+
 char	*string_inside_quotes(char *str, int idx)
 {
 	int	len;
-	int	idx_ret;
-	int	fechamento;
-	char	*retorno;
+	int	iret;
+	int	closing;
+	char	*ret;
 	
-	fechamento = find_next_char(str, idx, str[idx]);
-	if (!fechamento)
+	closing = find_next_char(str, idx, str[idx]);
+	if (!closing)
 		return (NULL);
-	len = fechamento - idx;
-	retorno = (char *) malloc(len * sizeof(char));
-	if (!retorno)
+	len = closing - idx;
+	ret = (char *) malloc(len * sizeof(char));
+	if (!ret)
 		return (NULL);
-	idx_ret = -1;
-	while (++idx < fechamento)
-		retorno[++idx_ret] = str[idx];
-	retorno[idx_ret + 1] = '\0';
-	return (retorno);
+	iret = -1;
+	while (++idx < closing)
+		ret[++iret] = str[idx];
+	ret[iret + 1] = '\0';
+	return (ret);
 }
+
+/*word_between_spaces: Essa função pega um vetor iniciado a partir de um
+caractere direcionada por "idx". Ela pega todos os caracteres seguintes
+até que a próxima aspa, espaço, tab ou '\0' seja encontrada.*/
 
 char	*word_between_spaces(char *str, int idx)
 {
 	int len;
-	int ultimo;
+	int closing;
 	int iret;
 	char *ret;
 
-	ultimo = find_next_char(str, idx, 1);
-	if (!ultimo)
+	closing = find_next_char(str, idx, 1);
+	if (!closing)
 		return (NULL);
-	len = (ultimo - idx) + 1;
+	len = (closing - idx) + 1;
 	ret = (char *) malloc(len * sizeof(char));
 	iret = -1;
-	while (idx < ultimo)
+	while (idx < closing)
 		ret[++iret] = str[idx++];
 	ret[iret + 1] = '\0';
 	return (ret);
 }
+
+/*input_tokens: Essa função verifica se há aspas fechadas, printa as
+palavras separadas e printa os vetores dentro das aspas duplas. Se der
+erro com aspas, ela retorna 1 e, se der erro com palavras, ela retorna 2*/
 
 int input_tokens(char *str)
 {
