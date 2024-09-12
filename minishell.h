@@ -10,6 +10,12 @@ typedef struct s_token {
 	struct s_token *next;
 }		t_token;
 
+enum {
+	PIPE = 3,
+	SEILA,
+	SABELA,
+};
+
 int is_space(int c);
 int	find_next_char(char *str, int idx, int tipo);
 int input_tokens(char *str);

@@ -14,7 +14,7 @@ SRCS	=	funcao_que_separa_input.c\
 all: $(NAME)
 
 libft:
-	cd $(LIBRARY) && $(MAKE) && cp -v libft.a ../
+	cd $(LIBRARY) && $(MAKE) bonus && cp -v libft.a ../
 
 minishell: libft
 	cc -g $(SRCS) libft.a -lreadline -o $(NAME)
