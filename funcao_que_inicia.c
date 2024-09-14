@@ -21,13 +21,13 @@ int main(void)
 		}
 
 		ret_itokens = input_tokens(input);
-		if (ret_itokens == 1)
+		if (ret_itokens == ERROR_QUOTE)
 		{
 			rl_on_new_line();
 			rl_replace_line("Aspas sem fechamento.\n", 0);
 			rl_redisplay();
 		}
-		else if (ret_itokens == 2)
+		else if (ret_itokens == ERROR_WORD)
 		{
 			rl_on_new_line();
 			rl_replace_line("Erro na alocação de palavras.\n", 0);

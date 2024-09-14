@@ -9,14 +9,6 @@
 #include "includes.h"
 #include "minishell.h"
 
-int	lalen(char *str)
-{
-	int i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
 /*is_space: Essa função verifica se o caractere é um espaço ou uma tab*/
 
 int is_space(int c)
@@ -30,22 +22,20 @@ int is_space(int c)
 igual ao caractere colocado em "type". Porém, se type for igual a
 "1", a função vai procurar o próximo espaço ou tab*/
 
-int	find_next_char(char *str, int idx, int type)
+int	find_next_char(char *str, int idx)
 {
+	int flag = 0;
 	while (str[idx])
 	{
-		if (type == 1)
-		{
-			if (is_space(str[idx]))
-				return (idx);
-			else if (str[idx + 1] == 34 || str[idx +1] == 39)
-				return (++idx);
-			else if (!str[idx + 1])
-				return (++idx);
-		}
+		if ((str[idx] == 34 || str[idx] == 39) && flag == 0)
+			flag = str[idx];
+		else if (str[idx] == flag)
+			flag = 0;
+		if (is_space(str[idx]) && flag == 0)
+			return (idx);
+		else if ((!str[idx + 1]) && flag == 0)
+			return (++idx);
 		idx++;
-		if (str[idx] == type)
-				return (idx);
 	}
 	return (0);
 }
@@ -62,45 +52,14 @@ size_t w_count(char *str)
 		return (0);
 	while(str[i])
 	{
-		if(str[i] == 34 || str[i] == 39)
+		if (!is_space(str[i]))
 		{
-			i = find_next_char(str, i, str[i]);
-			count++;
-		}
-		else if (!is_space(str[i]))
-		{
-			i = find_next_char(str, i, 1) - 1;
+			i = find_next_char(str, i) - 1;
 			count++;
 		}
 		i++;
 	}
 	return (count);
-}
-
-/*string_inside_quotes: Essa função pega um vetor iniciado a partir de uma
-aspa direcionada por "idx". Ela pega todos os caracteres seguintes até que a
-próxima aspa seja encontrada. Caso não tenha próxima aspa, a função retorna
-"NULL"*/
-
-char	*string_inside_quotes(char *str, int idx)
-{
-	int	len;
-	int	iret;
-	int	closing;
-	char	*ret;
-	
-	closing = find_next_char(str, idx, str[idx]);
-	if (!closing)
-		return (NULL);
-	len = closing - idx;
-	ret = (char *) ft_calloc(len, sizeof(char *));
-	if (!ret)
-		return (NULL);
-	iret = -1;
-	while (++idx < closing)
-		ret[++iret] = str[idx];
-	ret[iret + 1] = '\0';
-	return (ret);
 }
 
 /*word_between_spaces: Essa função pega um vetor iniciado a partir de um
@@ -114,7 +73,7 @@ char	*word_between_spaces(char *str, int idx)
 	int iret;
 	char *ret;
 
-	closing = find_next_char(str, idx, 1);
+	closing = find_next_char(str, idx);
 	if (!closing)
 		return (NULL);
 	len = (closing - idx) + 1;
@@ -139,6 +98,22 @@ void	w_free(char **str, size_t o)
 	free(str);
 }
 
+int all_quotes_has_end(char *str)
+{
+	int i = 0;
+	int flag = 0;
+	while (str[i] != '\0')
+	{
+		if((str[i] == 34 || str[i] == 39) && flag == 0)
+			flag = str[i];
+		else if(str[i] == flag)
+			flag = 0;
+		i++;
+	}
+	if (flag == 0)
+		return (1);
+	return (0);
+}
 
 char **split_input_mod(char *str)
 {
@@ -155,19 +130,7 @@ char **split_input_mod(char *str)
 		return (NULL);
 	while (ret && str[i_str])
 	{
-		if(str[i_str] == 34 || str[i_str] == 39)
-		{
-			ret[i_ret] = string_inside_quotes(str, i_str);
-			if (!ret[i_ret])
-			{
-				w_free(ret, i_ret);
-				return (NULL);
-			}
-			printf("Achei aspas		|%s|\n", ret[i_ret]);
-			i_str = find_next_char(str, i_str, str[i_str]);
-			i_ret++;
-		}
-		else if (!is_space(str[i_str]))
+		if (!is_space(str[i_str]))
 		{
 			ret[i_ret] = word_between_spaces(str, i_str);
 			if (!ret[i_ret])
@@ -176,7 +139,7 @@ char **split_input_mod(char *str)
 				return (NULL);
 			}
 			printf("Achei uma palavra	|%s|\n", ret[i_ret]);
-			i_str = find_next_char(str, i_str, 1) - 1;
+			i_str = find_next_char(str, i_str) - 1;
 			i_ret++;
 		}
 		i_str++;
@@ -195,9 +158,11 @@ int input_tokens(char *str)
 	int count = -1;
 	char **splited;
 
+	if (!all_quotes_has_end(str))
+		return (ERROR_QUOTE);
 	splited = split_input_mod(str);
 	if (!splited)
-		return (2);
+		return (ERROR_WORD);
 	else
 	{
 		printf("Sucesso!\n");
@@ -205,7 +170,6 @@ int input_tokens(char *str)
 		{
 			printf("%d - |%s|\n", ++count, splited[i]);
 			i++;
-			printf("%i", SABELA);
 		}
 	}
 	return (0);
