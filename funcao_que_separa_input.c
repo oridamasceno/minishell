@@ -40,8 +40,8 @@ int	find_next_char(char *str, int idx)
 	return (0);
 }
 
-/*w_count: Essa função conta a quantidade de palavras dentro do input.*/
-size_t w_count(char *str)
+/*word_count: Essa função conta a quantidade de palavras dentro do input.*/
+size_t word_count(char *str)
 {
 	size_t i;
 	size_t count;
@@ -85,7 +85,7 @@ char	*word_between_spaces(char *str, int idx)
 	return (ret);
 }
 
-void	w_free(char **str, size_t o)
+void	split_free(char **str, size_t o)
 {
 	size_t	i;
 
@@ -97,6 +97,9 @@ void	w_free(char **str, size_t o)
 	}
 	free(str);
 }
+
+/*Essa função verifica se no input todas as aspas estão abertas
+e fechadas corretamente.*/
 
 int all_quotes_has_end(char *str)
 {
@@ -125,7 +128,7 @@ char **split_input_mod(char *str)
 	i_ret = 0;
 	if (!str)
 		return (NULL);
-	ret = (char **) ft_calloc(w_count(str), sizeof(char *));
+	ret = (char **) ft_calloc(word_count(str), sizeof(char *));
 	if (!ret)
 		return (NULL);
 	while (ret && str[i_str])
@@ -135,7 +138,7 @@ char **split_input_mod(char *str)
 			ret[i_ret] = word_between_spaces(str, i_str);
 			if (!ret[i_ret])
 			{
-				w_free(ret, i_ret);
+				split_free(ret, i_ret);
 				return (NULL);
 			}
 			printf("Achei uma palavra	|%s|\n", ret[i_ret]);
@@ -172,5 +175,6 @@ int input_tokens(char *str)
 			i++;
 		}
 	}
+	
 	return (0);
 }
