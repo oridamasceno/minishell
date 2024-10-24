@@ -174,6 +174,7 @@ int input_tokens(char *str)
 			printf("%d - |%s|\n", ++count, splited[i]);
 			i++;
 		}
+		split_free(splited, i);
 	}
 	
 	return (0);
