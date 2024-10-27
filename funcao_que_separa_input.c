@@ -77,7 +77,9 @@ char	*word_between_spaces(char *str, int idx)
 	if (!closing)
 		return (NULL);
 	len = (closing - idx) + 1;
-	ret = (char *) ft_calloc(len, sizeof(char *));
+	ret = (char *) ft_calloc(len, sizeof(char));
+	if (!ret)
+		return (NULL);
 	iret = -1;
 	while (idx < closing)
 		ret[++iret] = str[idx++];
@@ -128,7 +130,7 @@ char **split_input_mod(char *str)
 	i_ret = 0;
 	if (!str)
 		return (NULL);
-	ret = (char **) ft_calloc(word_count(str), sizeof(char *));
+	ret = (char **) ft_calloc(word_count(str) + 1, sizeof(char *));
 	if (!ret)
 		return (NULL);
 	while (ret && str[i_str])
