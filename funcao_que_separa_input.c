@@ -6,7 +6,6 @@
  * 124 - pipe;
 */
 
-#include "includes.h"
 #include "minishell.h"
 
 /*is_space: Essa função verifica se o caractere é um espaço ou uma tab*/

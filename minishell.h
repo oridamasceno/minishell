@@ -2,13 +2,20 @@
 # define MINISHELL_H
 # define MAX_SIZE 1024
 
-# include "includes.h"
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stdio.h>
+# include <stddef.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "./libft/libft.h"
 
-typedef struct s_token {
-	char	str_token[MAX_SIZE];
-	struct s_token *next;
-}		t_token;
+typedef struct s_env {
+	char *key;
+	char *str;
+	struct s_env *next;
+} t_env;
 
 enum {
 	ERROR_QUOTE = 3,
