@@ -23,6 +23,11 @@ enum {
 	SABELA,
 };
 
+t_env	*my_lstlast(t_env *lst);
+void	my_lstadd_back(t_env **lst, t_env *new);
+t_env	*my_lstnew(char *first_str, char *second_str);
+void free_env(t_env *list);
+
 int is_space(int c);
 size_t word_count(char *str);
 void	split_free(char **str, size_t o);

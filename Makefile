@@ -11,6 +11,7 @@ LIBRARY	=	./libft/
 SRCS	=	funcao_que_separa_input.c\
 			funcao_que_inicia.c\
 			funcao_cria_nova_env.c\
+			utils_env.c\
 
 all: $(NAME)
 

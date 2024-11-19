@@ -1,6 +1,4 @@
 /*
- * Compilação: "cc -Wall -Wextra -Werror funcao_que_separa_input.c -lreadline". !!!
- *
  * 39 - aspas simples;
  * 34 - aspas duplas;
  * 124 - pipe;
@@ -8,18 +6,12 @@
 
 #include "minishell.h"
 
-/*is_space: Essa função verifica se o caractere é um espaço ou uma tab*/
-
 int is_space(int c)
 {
 	if (c == ' ' || c == '\t')
 		return (c);
 	return (0);
 }
-
-/*find_next_char: Essa função procura o próximo caractere que seja
-igual ao caractere colocado em "type". Porém, se type for igual a
-"1", a função vai procurar o próximo espaço ou tab*/
 
 int	find_next_char(char *str, int idx)
 {
@@ -39,7 +31,6 @@ int	find_next_char(char *str, int idx)
 	return (0);
 }
 
-/*word_count: Essa função conta a quantidade de palavras dentro do input.*/
 size_t word_count(char *str)
 {
 	size_t i;
@@ -60,10 +51,6 @@ size_t word_count(char *str)
 	}
 	return (count);
 }
-
-/*word_between_spaces: Essa função pega um vetor iniciado a partir de um
-caractere direcionada por "idx". Ela pega todos os caracteres seguintes
-até que a próxima aspa, espaço, tab ou '\0' seja encontrada.*/
 
 char	*word_between_spaces(char *str, int idx)
 {
@@ -98,9 +85,6 @@ void	split_free(char **str, size_t o)
 	}
 	free(str);
 }
-
-/*Essa função verifica se no input todas as aspas estão abertas
-e fechadas corretamente.*/
 
 int all_quotes_has_end(char *str)
 {
@@ -151,10 +135,6 @@ char **split_input_mod(char *str)
 	ret[i_ret] = NULL;
 	return (ret);
 }
-
-/*input_tokens: Essa função verifica se há aspas fechadas, printa as
-palavras separadas e printa os vetores dentro das aspas duplas. Se der
-erro com aspas, ela retorna 1 e, se der erro com palavras, ela retorna 2*/
 
 int input_tokens(char *str)
 {

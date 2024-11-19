@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-/*
 int rl_start_function(void)
 {
 	char	*input;
@@ -41,4 +40,3 @@ int rl_start_function(void)
 
 	return (0);
 }
-*/
