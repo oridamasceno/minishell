@@ -2,7 +2,7 @@
 
 static int	first_equal(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -14,32 +14,32 @@ static int	first_equal(char *str)
 	return (-1);
 }
 
-t_env *new_env_lst(char **ev, t_env *env_list)
+t_env	*new_env_lst(char **ev, t_env *env_list)
 {
-    int i;
-    int equal_index;
-    char *key;
-    char *str;
-    t_env *new;
+	int		i;
+	int		equal_index;
+	char	*key;
+	char	*str;
+	t_env	*new;
 
-    i = -1;
-    while (ev[++i])
-    {
-        equal_index = first_equal(ev[i]);
-        key = ft_substr(ev[i], 0, equal_index);
-        if (!key)
-            return (NULL);
-        str = ft_substr(ev[i], equal_index + 1, strlen(ev[i]) - equal_index - 1);
-        if (!str)
-        {
-            free (key);
-            return (NULL);
-        }
-        new = my_lstnew(key, str);
-        //fazer tratamento caso dê errado
-        my_lstadd_back(&env_list, new);
-    }
-    return (env_list);
+	i = -1;
+	while (ev[++i])
+	{
+		equal_index = first_equal(ev[i]);
+		key = ft_substr(ev[i], 0, equal_index);
+		if (!key)
+			return (NULL);
+		str = ft_substr(ev[i], equal_index + 1, strlen(ev[i]) - equal_index - 1);
+		if (!str)
+		{
+			free (key);
+			return (NULL);
+		}
+		new = my_lstnew(key, str);
+		//fazer tratamento caso dê errado
+		my_lstadd_back(&env_list, new);
+	}
+	return (env_list);
 }
 /*
 int main(int ac, char **av, char **ev)

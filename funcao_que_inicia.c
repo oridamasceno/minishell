@@ -1,24 +1,24 @@
 #include "minishell.h"
 
-int rl_start_function(void)
+void	go_start_function(char **ev)
 {
 	char	*input;
-	int	ret_itokens;
+	int		ret_itokens;
+	t_env	*env_list;
 
+	env_list = NULL;
+	env_list = new_env_lst(ev, env_list);
 	printf("Bem-vindo ao nosso start!\n");
 	printf("Digite 'sair' para sair.\n");
-
 	while (1)
 	{
 		input = readline("\nnickname@123:~/um/caminho/qualquer$ ");
 		add_history(input);
-
 		if (strcmp(input, "sair") == 0)
 		{
 			free(input);
 			break ;
 		}
-
 		ret_itokens = input_tokens(input);
 		if (ret_itokens == ERROR_QUOTE)
 		{
@@ -34,9 +34,6 @@ int rl_start_function(void)
 		}
 		free(input);
 	}
-
 	rl_clear_history();
 	printf("\nPrograma encerrado.\n");
-
-	return (0);
 }

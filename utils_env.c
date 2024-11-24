@@ -25,19 +25,21 @@ void	my_lstadd_back(t_env **lst, t_env *new)
 	}
 }
 
-// void	my_lstadd_front(t_env **lst, t_env *new)
-// {
-// 	if (lst)
-// 	{
-// 		if (*lst && new)
-// 		{
-// 			new->next = *lst;
-// 			*lst = new;
-// 		}
-// 		else if (new)
-// 			*lst = new;
-// 	}
-// }
+/*
+void	my_lstadd_front(t_env **lst, t_env *new)
+{
+	if (lst)
+	{
+		if (*lst && new)
+		{
+			new->next = *lst;
+			*lst = new;
+		}
+		else if (new)
+			*lst = new;
+	}
+}
+*/
 
 t_env	*my_lstnew(char *first_str, char *second_str)
 {
@@ -46,23 +48,22 @@ t_env	*my_lstnew(char *first_str, char *second_str)
 	list = (t_env *) malloc(sizeof(t_env));
 	if (!list)
 		return (NULL);
-
-    list->key = first_str;
-    list->str = second_str;
+	list->key = first_str;
+	list->str = second_str;
 	list->next = NULL;
 	return (list);
 }
 
-void free_env(t_env *list)
+void	free_env(t_env *list)
 {
-    t_env *temp;
-    
-    while (list)
-    {
-        temp = list;
-        list = list->next;
-        free(temp->key);
-        free(temp->str);
-        free(temp);
-    }
+	t_env	*temp;
+
+	while (list)
+	{
+		temp = list;
+		list = list->next;
+		free(temp->key);
+		free(temp->str);
+		free(temp);
+	}
 }
