@@ -97,6 +97,8 @@ char	**ft_split(const char *s, char c)
 	return (str);
 }
 /*
+#include <stdio.h>
+
 int main(void)
 {
 	char *s = ".....lari..ama.chocolate..e.acai.6.7.8.9.10.11.12.13...";

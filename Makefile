@@ -8,11 +8,13 @@ RM		=	rm -f
 
 LIBRARY	=	./libft/
 
-SRCS	=	split_separa_input.c\
-			utils_separa_input.c\
-			funcao_que_inicia.c\
-			funcao_cria_nova_env.c\
-			utils_env.c\
+SRCS	=	input_checker_functions.c\
+			input_tokenizator.c\
+			input_start_function.c\
+			env_function.c\
+			env_utils.c\
+			split_function.c\
+			split_utils.c\
 			main.c\
 
 all: $(NAME)
